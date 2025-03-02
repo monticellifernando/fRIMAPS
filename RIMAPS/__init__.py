@@ -1,0 +1,2 @@
+print('RIMAPS Module! ', end='')
+

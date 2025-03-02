@@ -1,0 +1,18 @@
+# vim shit
+.*sw*
+
+
+# python cache
+__pycache__
+
+# images!
+*png
+*jpg
+*jpeg
+*JPEG
+*PNG
+*JPG
+
+# output files
+*txt
+*csv
