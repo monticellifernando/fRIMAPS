@@ -1,4 +1,4 @@
-#!/bin/python
+#!env python3
 # -*- coding: utf-8 -*-
 import sys, getopt, math, os
 import argparse
@@ -18,8 +18,7 @@ def Get1DFFtFromImage(m_img):
             m_value_col=m_value_col+m_img[col][row]
         m_1d_img.append(float(m_value_col)/float(cols))
 
-    #m_fft=np.fft.rfft(m_img_r)
-    #m_fft_1d=1.*np.abs(np.fft.rfft(m_1d_img))
+
     m_fft_1d=(np.fft.rfft(m_1d_img))
     return(m_fft_1d)
 
@@ -31,14 +30,6 @@ def Get1DFFtFromImage(m_img):
 def ObtenerMaximo(data, GlobalMaximum):
     cantidad=len(data)-1
     maximo=-1
-    #if (GlobalMaximum): 
-    #    for i in range(1,cantidad-1):
-    #        m_local=data[i]
-
-    #        if  m_local > maximo:
-    #            maximo=m_local
-
-    #else:
     for i in range(2,cantidad-2):
         m_local=data[i]
         m_prev=data[i-1]
@@ -72,7 +63,6 @@ def PlotDataset(data, x=0, Name="test.png"):
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
 
-    #print(data)
     ax1.scatter(x[:cantidad], np.asarray(data)[:cantidad], s=10, c='b', marker="s", label='first')
     plt.title(Name)# , plt.xticks([]), plt.yticks([])
     # plt.show()
@@ -85,7 +75,6 @@ def Plot3D(m_3d_fig):
   ax = fig.gca(projection='3d')
   X, Y = np.mgrid[:cols,:rows]
   
-  #surf = ax.plot_wireframe(X, Y, magnitude_spectrum, rstride=2, cstride=2,
   surf = ax.plot_surface(Y, X, m_3d_fig, rstride=1, cstride=1, cmap=cm.jet,
                          linewidth=0, antialiased=False)
   
@@ -116,12 +105,7 @@ def GetRIMAPS(m_img,m_Steps,  GlobalMaximum, Debug=False):
         m_angle= 180./m_Steps*Step
         print(f'Step {Step}/{m_Steps}, angle = {m_angle}⁰', end=m_end)
         m_img_r=RotateImage(m_img,m_angle)
-        #plt.imshow(m_img_r, cmap = 'gray')
-        #plt.show()
-        # m_fft=Get1DFFtFromImage(m_img_r)
-        # #m_fft=np.fft.rfft(m_img_r)
-        # #print("Size = "+str(m_fft.shape))
-        # fft_1d= 1.*np.abs(m_fft)[1:] # FFT de la imagen en 2D
+
         
         
         fft_1d= 1.*np.abs(np.fft.rfft2(m_img_r)[0][:])[1:] # FFT de la imagen en 2D
@@ -130,9 +114,7 @@ def GetRIMAPS(m_img,m_Steps,  GlobalMaximum, Debug=False):
         maximo=ObtenerMaximo(fft_1d, GlobalMaximum)
         x_output.append(m_angle)
         y_output.append(maximo)
-        #Plot3D(fft_1d)
-        #print("Angulo "+str(m_angle)+" Maximo = "+str(maximo))
-        #PlotDataset(fft_1d)
+
 
     return x_output,y_output
 
