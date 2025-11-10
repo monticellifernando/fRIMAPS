@@ -24,6 +24,21 @@ You need to have a working python environment with the following dependencies in
 * numpy
 * matplotlib
 
+## Install/setup environment with mamba:
+Setup the specific python environment with mamba. The first time set it up like:
+
+
+
+    mamba create -n fRIMAPS python=3.11
+    mamba activate fRIMAPS
+    pip install -r requirements.txt
+
+
+Next time you use it, just activate the environment:
+
+    mamba activate fRIMAPS
+
+
 ## How to use it!
 
 To run it you need to call the '''fRIMAPS.py''' from the command line with at least the image input file as an argument. For eample, if you want to run over the provided examples of images under Images you can run:

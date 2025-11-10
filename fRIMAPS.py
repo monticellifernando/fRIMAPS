@@ -1,4 +1,4 @@
-#!/bin/python
+#!env python3
 # -*- coding: utf-8 -*-
 import sys, getopt, math, os
 import argparse
