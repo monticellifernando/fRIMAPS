@@ -24,7 +24,12 @@ class RIMAPS(Print):
     
     # Objects:
 
-    m_img = None
+    m_img = None          # Loaded image
+    m_img_r = None        # Rotated image by angle
+
+    m_centered_2Dfft = None
+
+    m_fft = None
 
 
     def __init__(self):
@@ -32,12 +37,25 @@ class RIMAPS(Print):
 
     def AddImage(self, image):
         self.INFO('Setting up Image')
-        self.m_img = image
+        self.m_img   = image
+        self.m_img_r = image
 
     def AddImageFromFile(self, m_file):
         self.INFO(f'Opening image from file {m_file}')
         image = cv2.imread(m_file,0)
         self.AddImage(image)
+
+    def PlotImage(self):
+        self.INFO(f'Plotting Image')
+        plt.imshow(self.m_img_r)
+        plt.colorbar(label='Pixel Intensity')
+        plt.show()
+
+    def PlotFFT(self):
+        self.INFO(f'Plotting 2DFFT')
+        plt.imshow(np.abs(self.m_fft))
+        plt.colorbar(label='Pixel Intensity')
+        plt.show()
 
 
 
@@ -130,13 +148,21 @@ class RIMAPS(Print):
       
       #fig.savefig(out_filename)
       plt.show()
-    
-       
+
+    def Get2DFFT(self, s = None):
+        self.INFO('Computing 2D FFT')
+        self.m_fft = np.fft.rfft2(self.m_img_r, s = s)
+
+   
+    def CenterFFT(self):
+        self.INFO('Centering 2D FFT')
+        self.m_fft = np.fft.fftshift(self.m_fft)
+
+
     def RotateImage(self, m_angle=0.2):
       image_center = tuple(np.array(self.m_img.shape)/2)
       rot_mat = cv2.getRotationMatrix2D(image_center,m_angle,1.41)
-      result = cv2.warpAffine(self.m_img, rot_mat, self.m_img.shape,flags=cv2.INTER_LINEAR)
-      return result
+      self.m_img_r = cv2.warpAffine(self.m_img, rot_mat, self.m_img.shape,flags=cv2.INTER_LINEAR)
     
     def GetRIMAPS(self): #m_img,m_Steps,  GlobalMaximum, Debug=False):
     
@@ -151,10 +177,12 @@ class RIMAPS(Print):
                 m_end = '\n'
             m_angle= 180./self.Steps*Step
             self.INFO(f'Step {Step}/{self.Steps}, angle = {m_angle}⁰', end=m_end)
-            m_img_r=self.RotateImage(m_angle)
+            self.RotateImage(m_angle)
+
+            self.Get2DFFT() # compute the FFT of the rotated image
             
             
-            fft_1d= 1.*np.abs(np.fft.rfft2(m_img_r)[0][:])[1:] # FFT de la imagen en 2D
+            fft_1d= 1.*np.abs(self.m_fft[0][:])[1:] # 1D FFT de la imagen en 2D
             
             self.DEBUG(f'{fft_1d}, Shape = {fft_1d.shape}')
             maximo=self.GetMaxValue(fft_1d)
