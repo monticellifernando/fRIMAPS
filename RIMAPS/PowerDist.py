@@ -1,4 +1,6 @@
 from RIMAPS.RIMAPS import RIMAPS
+import numpy as np
+from matplotlib import pyplot as plt
 
 class Powerdist(RIMAPS):
 
@@ -6,11 +8,67 @@ class Powerdist(RIMAPS):
 
     m_circulo = []
 
+    m_fft_abs2 = []
+
+    m_PSD_x = []
+    m_PSD_y = []
+
+
+
 
     def __init__(self, nombre='PSD'):
         self.INFO(f'New {nombre}')
         self.nombre = nombre
         super().__init__()
+
+
+    def IntegralPSD(self, radio=1):
+        # Integrates the power FFT on the pixels in the defined circle
+        self.Circulo(radio = radio)
+        m_integral = 0
+
+        for pixel in self.m_circulo:
+            m_fft_abs2_in_pixel = self.m_fft_abs2[pixel[0]][pixel[1]]
+            self.VERBOSE(f'     m_integral += {m_fft_abs2_in_pixel}')
+            m_integral = m_integral + m_fft_abs2_in_pixel
+
+        return m_integral
+        
+
+    def ComputePSD(self):
+        # Compute the PSD for the ffT image
+        # First lets compute the 2D FFT (if not there)
+        if len(self.m_fft) == 0 :
+            self.DEBUG('    No FFT 2D available. Computing')
+            self.Get2DFFT()
+
+        if len(self.m_fft_abs2) == 0:
+            self.DEBUG('    No Power FFT available. Computing')
+            self.m_fft_abs2 = np.abs(self.m_fft)**2
+
+        # Do it from radious 1 to the radious corresponding to the minimum of the shape
+        fftshape = self.m_fft_abs2.shape
+        MaxRad = min(fftshape[0],fftshape[1])
+        self.VERBOSE(f' ffthsape = {fftshape}, MaxRad = {MaxRad}')
+        self.m_PSD_x = []
+        self.m_PSD_y = []
+        for r in range(1,MaxRad):
+            self.DEBUG(f'   ComputePSD for r = {r}')
+            self.m_PSD_x.append(r)
+            self.m_PSD_y.append(self.IntegralPSD(r))
+            self.DEBUG(' ')
+
+
+    def PlotPSD(self, filename = ''):
+        self.INFO('PlotPSD')
+        if len(self.m_PSD_x) > 0 and len(self.m_PSD_y) > 0 :
+            plt.plot(self.m_PSD_x,self.m_PSD_y)
+            plt.yscale('log')
+            plt.show()
+        else:
+            self.ERROR('No PSD available :-(')
+
+
 
 
     def Circulo(self,radio=1):
@@ -60,28 +118,7 @@ class Powerdist(RIMAPS):
 
             # here we get the best matching pix to he radious
             self.m_circulo.append(pix_candidate)
-            print()
-
-
-
-
-            
-
-
-                
-
-
-        # Now, lets fill until I get index y = 0
-
-        print(centro)
-
-
- 
-
-
-
-
-
+            self.DEBUG(' ')
 
 
 

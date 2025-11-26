@@ -27,9 +27,9 @@ class RIMAPS(Print):
     m_img = None          # Loaded image
     m_img_r = None        # Rotated image by angle
 
-    m_centered_2Dfft = None
+    m_centered_2Dfft = []
 
-    m_fft = None
+    m_fft = []
 
 
     def __init__(self):
@@ -150,21 +150,24 @@ class RIMAPS(Print):
       plt.show()
 
     def Get2DFFT(self, s = None):
+        # Computs the 2D FFT of the image
         self.INFO('Computing 2D FFT')
         self.m_fft = np.fft.rfft2(self.m_img_r, s = s)
 
-   
     def CenterFFT(self):
+        # Centers the 2D FFT so the 0,0 frequiency is in the center of the graph. Namely you get positive and negative frequency domains for both k_x and k_y
         self.INFO('Centering 2D FFT')
         self.m_fft = np.fft.fftshift(self.m_fft)
 
 
     def RotateImage(self, m_angle=0.2):
-      image_center = tuple(np.array(self.m_img.shape)/2)
-      rot_mat = cv2.getRotationMatrix2D(image_center,m_angle,1.41)
-      self.m_img_r = cv2.warpAffine(self.m_img, rot_mat, self.m_img.shape,flags=cv2.INTER_LINEAR)
+        # Rotates the image to an angle m_angle
+        image_center = tuple(np.array(self.m_img.shape)/2)
+        rot_mat = cv2.getRotationMatrix2D(image_center,m_angle,1.41)
+        self.m_img_r = cv2.warpAffine(self.m_img, rot_mat, self.m_img.shape,flags=cv2.INTER_LINEAR)
     
     def GetRIMAPS(self): #m_img,m_Steps,  GlobalMaximum, Debug=False):
+        # Well, compute the RIMAPS graph for the provided image and number of steps
     
         self.INFO(f'Processig image of size {self.m_img.shape}')
         
