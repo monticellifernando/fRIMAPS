@@ -24,10 +24,15 @@ You need to have a working python environment with the following dependencies in
 * numpy
 * matplotlib
 
-## Install/setup environment with mamba:
+## To use it you need to setup your environment! We provide two ways:
+* mamba
+* python environments
+
+Try one of the following:
+
+
+### 1 -  Install/setup environment with mamba:
 Setup the specific python environment with mamba. The first time set it up like:
-
-
 
     mamba create -n fRIMAPS python=3.11
     mamba activate fRIMAPS
@@ -37,6 +42,23 @@ Setup the specific python environment with mamba. The first time set it up like:
 Next time you use it, just activate the environment:
 
     mamba activate fRIMAPS
+
+### 2 -  Python venv
+
+First setup your environment. You need to be **inside** the folder of the project for this:
+
+    cd fRIMAPS
+    python3 -m venv fRIMAPS
+    # And now activate it:
+    source fRIMAPS/bin/activate
+    pip install -r requirements.txt
+    
+Done. Next time you use it yo just need to activate it:
+
+    source fRIMAPS/bin/activate
+
+Thats it.
+
 
 
 ## How to use it!
