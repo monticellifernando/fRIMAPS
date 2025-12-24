@@ -152,7 +152,10 @@ class RIMAPS(Print):
     def Get2DFFT(self, s = None):
         # Computs the 2D FFT of the image
         self.INFO('Computing 2D FFT')
-        self.m_fft = np.fft.rfft2(self.m_img_r, s = s)
+        try:
+            self.m_fft = np.fft.rfft2(self.m_img_r, s = s)
+        except Exception as e:
+            self.ERROR(f' Something funny happened with opening {self.m_img_r}. Exception {e}')
 
     def CenterFFT(self):
         # Centers the 2D FFT so the 0,0 frequiency is in the center of the graph. Namely you get positive and negative frequency domains for both k_x and k_y
