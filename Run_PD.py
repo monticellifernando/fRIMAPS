@@ -5,7 +5,7 @@ from pathlib import Path
 import argparse, sys
 
 def main(argv):
-    parser = argparse.ArgumentParser("FreeMAPS - the Free/Libre RIMAPS analysis tool, PSD tool")
+    parser = argparse.ArgumentParser("fRIMAPS - the Free/Libre RIMAPS analysis tool, PSD tool")
     parser.add_argument('-F', '--FileNames',  required=False, nargs ='+', help="Input file names. I will do PSD on each file listed here.")
     parser.add_argument('-P', '--Path',  required=False, help="Input folder where images live. I will loop over all images in this folder")
     parser.add_argument('-p', '--Plot',  required=False, action="store_true",  help="Plot PSD for each image file")

@@ -45,4 +45,34 @@ To run it you need to call the '''fRIMAPS.py''' from the command line with at le
 
     ./fRIMAPS.py  -f Images/circulo.png 
 
+# PSD tool
+
+We also provide a tool to compute PSD. How to run it? Just run the script passing the folder with all your images as a parameter
+
+    ./Run_PD.py -P Images 
+
+It will produce an output with the PSD computed for each figure in text format.
+You can run with ```-h``` to get help:
+
+
+    ./Run_PD.py -h
+    
+ 
+It will show you like:
+```
+RIMAPS Module! usage: fRIMAPS - the Free/Libre RIMAPS analysis tool, PSD tool [-h] [-F FILENAMES [FILENAMES ...]] [-P PATH] [-p] [-L LOGLEVEL]
+
+options:
+  -h, --help            show this help message and exit
+  -F FILENAMES [FILENAMES ...], --FileNames FILENAMES [FILENAMES ...]
+                        Input file names. I will do PSD on each file listed here.
+  -P PATH, --Path PATH  Input folder where images live. I will loop over all images in this folder
+  -p, --Plot            Plot PSD for each image file
+  -L LOGLEVEL, --LogLevel LOGLEVEL
+                        LogLevel. 1 ERROR, 2 WARNING, 4 INFO, 5 DEBUG, 7 VERBOSE
+
+```
+ 
+
+
 

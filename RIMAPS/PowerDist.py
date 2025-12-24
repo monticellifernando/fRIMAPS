@@ -96,7 +96,8 @@ class Powerdist(RIMAPS):
     def DumpPSD(self, filename ):
         with open(filename, 'w') as f:
             for data in range(len(self.m_PSD_x)):
-                f.write(f'{self.m_PSD_x[data]}  {self.m_PSD_y[data]}')
+                f.write(f'{self.m_PSD_x[data]}  {self.m_PSD_y[data]}\n')
+                
             f.close()
 
         self.INFO(f'PSD text file written in {filename}')
