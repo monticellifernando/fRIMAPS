@@ -12,7 +12,7 @@ The output format can be configured to be in any (or all) of the following:
 
 You can either clone this repository:
 
-    git clone git@github.com:monticellifernando/RIMAPS.git
+    git clone git@github.com:monticellifernando/fRIMAPS.git
 
 Or just get the zip file from this page
 
