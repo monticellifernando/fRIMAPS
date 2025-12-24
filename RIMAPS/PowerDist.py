@@ -9,6 +9,8 @@ class Powerdist(RIMAPS):
     m_circulo = []
 
     m_fft_abs2 = []
+    
+    m_fft_abs2_log = []
 
     m_PSD_x = []
     m_PSD_y = []
@@ -21,23 +23,38 @@ class Powerdist(RIMAPS):
         self.nombre = nombre
         super().__init__()
 
+    def SavePSD(self):
+        print()
 
-    def IntegralPSD(self, radio=1):
+    def PlotLogFFT(self):
+        self.INFO(f'Plotting log 2DFFT² ')
+        plt.imshow(self.m_fft_abs2_log)
+        plt.colorbar(label='Pixel Intensity')
+        plt.show()
+
+
+    def IntegralPSD(self, radio=1, useLog=False):
         # Integrates the power FFT on the pixels in the defined circle
         self.Circulo(radio = radio)
         m_integral = 0
 
+        m_fft = self.m_fft_abs2
+
+        if useLog:
+            m_fft = self.m_fft_abs2_log
+
         for pixel in self.m_circulo:
-            m_fft_abs2_in_pixel = self.m_fft_abs2[pixel[0]][pixel[1]]
-            self.VERBOSE(f'     m_integral += {m_fft_abs2_in_pixel}')
-            m_integral = m_integral + m_fft_abs2_in_pixel
+            m_fft_in_pixel = m_fft[pixel[0]][pixel[1]]
+            self.VERBOSE(f'     m_integral += {m_fft_in_pixel}')
+            m_integral = m_integral + m_fft_in_pixel
 
         return m_integral
         
 
-    def ComputePSD(self):
+    def ComputePSD(self, useLog=False):
         # Compute the PSD for the ffT image
         # First lets compute the 2D FFT (if not there)
+        self.INFO(f'Compute PSD {"Using Log scale" if useLog else ""}')
         if len(self.m_fft) == 0 :
             self.DEBUG('    No FFT 2D available. Computing')
             self.Get2DFFT()
@@ -45,6 +62,9 @@ class Powerdist(RIMAPS):
         if len(self.m_fft_abs2) == 0:
             self.DEBUG('    No Power FFT available. Computing')
             self.m_fft_abs2 = np.abs(self.m_fft)**2
+            self.DEBUG('    Computing also logaritm of Power FFT')
+            self.m_fft_abs2_log = np.log10(self.m_fft_abs2)
+
 
         # Do it from radious 1 to the radious corresponding to the minimum of the shape
         fftshape = self.m_fft_abs2.shape
@@ -55,19 +75,33 @@ class Powerdist(RIMAPS):
         for r in range(1,MaxRad):
             self.DEBUG(f'   ComputePSD for r = {r}')
             self.m_PSD_x.append(r)
-            self.m_PSD_y.append(self.IntegralPSD(r))
+            self.m_PSD_y.append(self.IntegralPSD(r, useLog))
             self.DEBUG(' ')
 
 
-    def PlotPSD(self, filename = ''):
+    def PlotPSD(self, filename = '', show = False):
         self.INFO('PlotPSD')
         if len(self.m_PSD_x) > 0 and len(self.m_PSD_y) > 0 :
             plt.plot(self.m_PSD_x,self.m_PSD_y)
             plt.yscale('log')
-            plt.show()
+            if show:
+                plt.show()
+            if filename != '':
+                self.DEBUG(f'Safing figure {filename}')
+                plt.savefig(filename)
         else:
             self.ERROR('No PSD available :-(')
 
+
+    def DumpPSD(self, filename ):
+        with open(filename, 'w') as f:
+            for data in range(len(self.m_PSD_x)):
+                f.write(f'{self.m_PSD_x[data]}  {self.m_PSD_y[data]}')
+            f.close()
+
+        self.INFO(f'PSD text file written in {filename}')
+
+    
 
 
 
