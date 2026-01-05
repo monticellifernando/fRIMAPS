@@ -40,12 +40,16 @@ def main(argv):
             f.WARNING(f'Ignoring PSD produced file {m_file}')
             continue
         m_outputfig = m_dir_char.join(m_file.split(m_dir_char)[:-1] + ['PSD_'+m_file.split(m_dir_char)[-1]])
+        try:
+            f.AddImageFromFile(m_file)
+            f.Get2DFFT()
+            f.ComputePSD()
+            f.PlotPSD(m_outputfig)
+            f.DumpPSD(m_outputfig+'.txt')
+        except Exception as e:
+            f.ERROR(f'  problem processing file {m_file}')
+            f.ERROR(f'{e}')
 
-        f.AddImageFromFile(m_file)
-        f.Get2DFFT()
-        f.ComputePSD()
-        f.PlotPSD(m_outputfig)
-        f.DumpPSD(m_outputfig+'.txt')
     
 if __name__ == "__main__":
     main(sys.argv[1:])
