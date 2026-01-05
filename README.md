@@ -55,6 +55,7 @@ First setup your environment. You need to be **inside** the folder of the projec
     
 Done. Next time you use it yo just need to activate it:
 
+    cd fRIMAPS
     source fRIMAPS/bin/activate
 
 Thats it.
@@ -65,19 +66,19 @@ Thats it.
 
 To run it you need to call the '''fRIMAPS.py''' from the command line with at least the image input file as an argument. For eample, if you want to run over the provided examples of images under Images you can run:
 
-    ./fRIMAPS.py  -f Images/circulo.png 
+    python fRIMAPS.py  -f Images/circulo.png 
 
 # PSD tool
 
 We also provide a tool to compute PSD. How to run it? Just run the script passing the folder with all your images as a parameter
 
-    ./Run_PD.py -P Images 
+    python Run_PD.py -P Images 
 
 It will produce an output with the PSD computed for each figure in text format.
 You can run with ```-h``` to get help:
 
 
-    ./Run_PD.py -h
+    python Run_PD.py -h
     
  
 It will show you like:

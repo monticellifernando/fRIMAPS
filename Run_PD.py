@@ -30,12 +30,16 @@ def main(argv):
     f.LogLevel = args.LogLevel
 
     for m_file in m_files:
-        if not m_file.split('/')[-1].startswith('PSD'):
+        m_dir_char = '/'
+        if '\\' in m_file:
+            f.INFO('Windows Detected!')
+            m_dir_char = '\\'
+        if not m_file.split(m_dir_char)[-1].startswith('PSD'):
             f.INFO(f'Computing PSD on {m_file}')
         else:
             f.WARNING(f'Ignoring PSD produced file {m_file}')
             continue
-        m_outputfig = '/'.join(m_file.split('/')[:-1] + ['PSD_'+m_file.split('/')[-1]])
+        m_outputfig = m_dir_char.join(m_file.split(m_dir_char)[:-1] + ['PSD_'+m_file.split(m_dir_char)[-1]])
 
         f.AddImageFromFile(m_file)
         f.Get2DFFT()
