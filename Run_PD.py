@@ -9,6 +9,7 @@ def main(argv):
     parser.add_argument('-F', '--FileNames',  required=False, nargs ='+', help="Input file names. I will do PSD on each file listed here.")
     parser.add_argument('-P', '--Path',  required=False, help="Input folder where images live. I will loop over all images in this folder")
     parser.add_argument('-p', '--Plot',  required=False, action="store_true",  help="Plot PSD for each image file")
+    parser.add_argument('-c', '--Comma',  required=False, action="store_true",  help="Comma for lfoating point instead of dot")
     parser.add_argument('-L', '--LogLevel',  required=False, type=int,  help="LogLevel. 1 ERROR, 2 WARNING, 4 INFO, 5 DEBUG, 7 VERBOSE", default = 4)
     args = parser.parse_args()
 
@@ -45,7 +46,20 @@ def main(argv):
             f.Get2DFFT()
             f.ComputePSD()
             f.PlotPSD(m_outputfig)
-            f.DumpPSD(m_outputfig+'.txt')
+            txtout = m_outputfig+'.txt' 
+            f.DumpPSD(txtout)
+            if args.Comma:
+                f.INFO(f' Updating output text file using commas -> {txtout}...')
+                # Read the file content
+                with open(txtout, 'r') as file:
+                    file_contents = file.read()
+                
+                # Perform the search and replace operation
+                updated_contents = file_contents.replace('.', ',')
+                
+                # Overwrite the file with the updated content
+                with open(txtout, 'w') as file:
+                    file.write(updated_contents)
         except Exception as e:
             f.ERROR(f'  problem processing file {m_file}')
             f.ERROR(f'{e}')
