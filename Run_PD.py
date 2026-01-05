@@ -27,13 +27,13 @@ def main(argv):
             m_files.append(m_file)
 
     print(f'Processing files: {m_files}')
-    f = PowerDist.Powerdist()
-    f.LogLevel = args.LogLevel
 
     for m_file in m_files:
+        f = PowerDist.Powerdist()
+        f.LogLevel = args.LogLevel
         m_dir_char = '/'
         if '\\' in m_file:
-            f.INFO('Windows Detected!')
+            f.DEBUG('   Windows filename Detected!')
             m_dir_char = '\\'
         if not m_file.split(m_dir_char)[-1].startswith('PSD'):
             f.INFO(f'Computing PSD on {m_file}')
